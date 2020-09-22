@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
+    "dayjs": "^1.8.25",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.2",
@@ -36,6 +37,9 @@
     "lint-staged": "^9.5.0",
     "sass": "^1.25.0",
     "sass-loader": "^8.0.2",
+    "svg-sprite-loader": "^4.2.1",
+    "svg-sprite-loader-mod": "^4.1.6-mod1",
+    "svgo-loader": "^2.2.1",
     "typescript": "~3.7.5",
     "vue-template-compiler": "^2.6.11"
   },
@@ -47,5 +51,13 @@
       "vue-cli-service lint",
       "git add"
     ]
-  }
+  },
+  "description": "```\r yarn install\r ```",
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

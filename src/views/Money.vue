@@ -3,8 +3,13 @@
         <!--{{record}}-->
         <NumberPad :value.sync="record.amount" @submit="saveRecord"/>
         <Tabs :data-source="recordTypeList" :value.sync="record.type"/>
-        <FormItem class="notes" field-name="备注" placeholder="在这里输入备注" @update:value="onUpdateNotes"/>
-        <Tags/>
+        <FormItem
+            class="notes"
+            field-name="备注"
+            placeholder="在这里输入备注"
+            :value.sync="record.notes"
+        />
+        <Tags @update:value="record.tags = $event"/>
     </Layout>
 </template>
 
@@ -46,7 +51,11 @@
         }
 
         saveRecord(){
+            if(!this.record.tags || this.record.tags.length === 0){
+                return window.alert("请选择一个标签!");
+            }
             this.$store.commit("createRecord",this.record);
+            this.record.notes = '';
         }
     }
 </script>
