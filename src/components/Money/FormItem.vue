@@ -50,7 +50,8 @@ export default class Notes extends Vue {
   flex-grow: 1;
   align-items: center;
   .name {
-    padding-right: 16px;
+    padding-right: 12px;
+    font-size: 0.15rem;
   }
   input {
     height: 40px;

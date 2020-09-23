@@ -73,10 +73,10 @@ export default class Money extends Vue {
   padding: 6px 0;
 }
 .notes-left {
-  border-right: 5px solid white;
+  border-right: 2px solid white;
 }
 .notes-right {
-  border-left: 5px solid white;
+  border-left: 2px solid white;
 }
 .createdAt {
   display: flex;
