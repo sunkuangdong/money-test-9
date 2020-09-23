@@ -47,11 +47,11 @@ export default class Notes extends Vue {
   font-size: 14px;
   padding-left: 16px;
   display: flex;
-  flex-grow: 1;
   align-items: center;
   .name {
-    padding-right: 12px;
-    font-size: 0.15rem;
+    display: inline-block;
+    width: 3em;
+    font-size: 12px;
   }
   input {
     height: 40px;

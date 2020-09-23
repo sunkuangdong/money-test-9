@@ -6,14 +6,14 @@
     <div class="createdAt">
       <FormItem
         class="notes notes-left"
-        field-name="日期"
+        field-name="日期："
         placeholder="在这里输入日期"
         :value.sync="record.createdAt"
         type="date"
       />
       <FormItem
         class="notes notes-right"
-        field-name="备注"
+        field-name="备注："
         placeholder="在这里输入备注"
         :value.sync="record.notes"
       />
