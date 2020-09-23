@@ -1,7 +1,9 @@
 <template>
   <Layout>
     <Tabs class-prefix="type" :data-source="recordTypeList" :value.sync="type" />
-    <Chart :options="polar" />
+    <div class="chart-wrapper" ref="chartWrapper">
+      <Chart class="chart" :options="polar" />
+    </div>
     <ol v-if="groupedList.length>0">
       <li v-for="(group,index) in groupedList" :key="index">
         <h3 class="title">
@@ -28,8 +30,6 @@ import recordTypeList from "@/constants/recordTypeList";
 import dayjs from "dayjs";
 import clone from "@/lib/clone";
 import Chart from "@/components/Chart.vue";
-// const ECharts: any = require("vue-echarts").default;
-// import "echarts/lib/chart/line";
 
 @Component({
   components: { Tabs, Chart },
@@ -37,6 +37,9 @@ import Chart from "@/components/Chart.vue";
 export default class Statistics extends Vue {
   tagString(tags: Tag[]) {
     return tags.length === 0 ? "无" : tags.map((item) => item.name).join("，");
+  }
+  mounted() {
+    (this.$refs.chartWrapper as HTMLDivElement).scrollLeft = 99999;
   }
   get recordList() {
     return (this.$store.state as RootState).recordList;
@@ -51,6 +54,10 @@ export default class Statistics extends Vue {
       data.push([r, i]);
     }
     return {
+      grid: {
+        left: 0,
+        right: 0,
+      },
       xAxis: {
         type: "category",
         data: [
@@ -85,12 +92,18 @@ export default class Statistics extends Vue {
           "Mon",
           "Tue",
         ],
+        axisTick: { alignWithLabel: true },
+        axisLine: { lineStyle: { color: "#666" } },
       },
       yAxis: {
         type: "value",
+        show: false,
       },
       series: [
         {
+          symbolSize: 14,
+          symbol: "circle",
+          itemStyle: { color: "#7ecbff" },
           data: [
             820,
             932,
@@ -126,7 +139,11 @@ export default class Statistics extends Vue {
           type: "line",
         },
       ],
-      tooltip: { show: true },
+      tooltip: {
+        show: true,
+        formatter: "{c}",
+        position: "top",
+      },
     };
   }
   get groupedList() {
@@ -189,10 +206,6 @@ export default class Statistics extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-.echarts {
-  max-width: 100%;
-  max-height: 50vh;
-}
 .noResult {
   text-align: center;
   padding: 16px;
@@ -230,5 +243,15 @@ export default class Statistics extends Vue {
 }
 ::v-deep .interval-tabs-item {
   height: 48px;
+}
+.chart {
+  width: 430%;
+  max-height: 30vh;
+  &-wrapper {
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
 </style>
