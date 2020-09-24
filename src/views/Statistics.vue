@@ -6,7 +6,7 @@
       :value.sync="type"
     />
     <div class="chart-wrapper" ref="chartWrapper">
-      <Chart class="chart" :options="polar" />
+      <Chart class="chart" :options="chartOptions" />
     </div>
     <ol v-if="groupedList.length > 0">
       <li v-for="(group, index) in groupedList" :key="index">
@@ -53,15 +53,15 @@ export default class Statistics extends Vue {
   }
 
   // ECharts数据
-  get y() {
+  get keyValueList() {
     const today = new Date();
     const array = [];
     for (let i = 0; i <= 29; i++) {
-      const date = day(today).subtract(i, "day").format("YYYY-MM-DD");
-      const found = _.find(this.recordList, { createdAt: date })?.amount;
+      const dateString = day(today).subtract(i, "day").format("YYYY-MM-DD");
+      const found = _.find(this.groupedList, { title: dateString });
       array.push({
-        data: date,
-        value: found ? found : 0,
+        data: dateString,
+        value: found ? found.total : 0,
       });
     }
     array.sort((a, b) => {
@@ -75,9 +75,9 @@ export default class Statistics extends Vue {
     });
     return array;
   }
-  get polar() {
-    const keys = this.y.map((item) => item.data);
-    const values = this.y.map((item) => item.value);
+  get chartOptions() {
+    const keys = this.keyValueList.map((item) => item.data);
+    const values = this.keyValueList.map((item) => item.value);
     return {
       grid: {
         left: 0,
@@ -124,6 +124,7 @@ export default class Statistics extends Vue {
       .sort(
         (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
       );
+    console.log(newList);
     type Result = { title: string; total?: number; items: RecordItem[] }[];
     const result: Result = [
       {
