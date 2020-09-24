@@ -1,7 +1,7 @@
 <template>
   <div>
     <label class="notes">
-      <span class="name">{{this.fieldName}}</span>
+      <span class="name">{{ this.fieldName }}</span>
       <template v-if="type === 'date'">
         <input
           :type="type"
@@ -12,7 +12,6 @@
       </template>
       <template v-else>
         <input
-          type="text"
           :value="value"
           @input="onValueChanged($event.target.value)"
           :placeholder="placeholder"
@@ -45,20 +44,20 @@ export default class Notes extends Vue {
 <style lang="scss" scoped>
 .notes {
   font-size: 14px;
-  padding-left: 16px;
+  padding-left: 8px;
   display: flex;
   align-items: center;
+  width: 100%;
   .name {
     display: inline-block;
-    width: 3em;
-    font-size: 12px;
+    padding-right: 3px;
   }
   input {
     height: 40px;
     flex-grow: 1;
     background: transparent;
     border: none;
-    padding-right: 16px;
+    width: 1.625rem;
   }
 }
 </style>
