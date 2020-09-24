@@ -1,20 +1,24 @@
 <template>
   <Layout>
-    <Tabs class-prefix="type" :data-source="recordTypeList" :value.sync="type" />
+    <Tabs
+      class-prefix="type"
+      :data-source="recordTypeList"
+      :value.sync="type"
+    />
     <div class="chart-wrapper" ref="chartWrapper">
       <Chart class="chart" :options="polar" />
     </div>
-    <ol v-if="groupedList.length>0">
-      <li v-for="(group,index) in groupedList" :key="index">
+    <ol v-if="groupedList.length > 0">
+      <li v-for="(group, index) in groupedList" :key="index">
         <h3 class="title">
-          {{beautify(group.title)}}
-          <span>￥{{group.total}}</span>
+          {{ beautify(group.title) }}
+          <span>￥{{ group.total }}</span>
         </h3>
         <ol>
           <li class="record" v-for="item in group.items" :key="item.id">
-            <span>{{tagString(item.tags)}}</span>
-            <span class="note">{{item.notes}}</span>
-            <span>￥{{item.amount}}</span>
+            <span>{{ tagString(item.tags) }}</span>
+            <span class="note">{{ item.notes }}</span>
+            <span>￥{{ item.amount }}</span>
           </li>
         </ol>
       </li>
@@ -30,6 +34,8 @@ import recordTypeList from "@/constants/recordTypeList";
 import dayjs from "dayjs";
 import clone from "@/lib/clone";
 import Chart from "@/components/Chart.vue";
+import _ from "lodash";
+import day from "dayjs";
 
 @Component({
   components: { Tabs, Chart },
@@ -39,20 +45,39 @@ export default class Statistics extends Vue {
     return tags.length === 0 ? "无" : tags.map((item) => item.name).join("，");
   }
   mounted() {
-    (this.$refs.chartWrapper as HTMLDivElement).scrollLeft = 99999;
+    const div = this.$refs.chartWrapper as HTMLDivElement;
+    div.scrollLeft = div.scrollWidth;
   }
   get recordList() {
     return (this.$store.state as RootState).recordList;
   }
-  // ECharts数据
-  get polar() {
-    const data = [];
 
-    for (let i = 0; i <= 360; i++) {
-      const t = (i / 180) * Math.PI;
-      const r = Math.sin(2 * t) * Math.cos(2 * t);
-      data.push([r, i]);
+  // ECharts数据
+  get y() {
+    const today = new Date();
+    const array = [];
+    for (let i = 0; i <= 29; i++) {
+      const date = day(today).subtract(i, "day").format("YYYY-MM-DD");
+      const found = _.find(this.recordList, { createdAt: date })?.amount;
+      array.push({
+        data: date,
+        value: found ? found : 0,
+      });
     }
+    array.sort((a, b) => {
+      if (a.data > b.data) {
+        return 1;
+      } else if (a.data === b.data) {
+        return 0;
+      } else {
+        return -1;
+      }
+    });
+    return array;
+  }
+  get polar() {
+    const keys = this.y.map((item) => item.data);
+    const values = this.y.map((item) => item.value);
     return {
       grid: {
         left: 0,
@@ -60,38 +85,7 @@ export default class Statistics extends Vue {
       },
       xAxis: {
         type: "category",
-        data: [
-          "Mon",
-          "Tue",
-          "Wed",
-          "Thu",
-          "Fri",
-          "Sat",
-          "Sun",
-          "Mon",
-          "Tue",
-          "Wed",
-          "Thu",
-          "Fri",
-          "Sat",
-          "Sun",
-          "Mon",
-          "Tue",
-          "Wed",
-          "Thu",
-          "Fri",
-          "Sat",
-          "Sun",
-          "Mon",
-          "Tue",
-          "Wed",
-          "Thu",
-          "Fri",
-          "Sat",
-          "Sun",
-          "Mon",
-          "Tue",
-        ],
+        data: keys,
         axisTick: { alignWithLabel: true },
         axisLine: { lineStyle: { color: "#666" } },
       },
@@ -104,38 +98,7 @@ export default class Statistics extends Vue {
           symbolSize: 14,
           symbol: "circle",
           itemStyle: { color: "#7ecbff" },
-          data: [
-            820,
-            932,
-            901,
-            934,
-            1290,
-            1330,
-            1320,
-            820,
-            932,
-            901,
-            934,
-            1290,
-            1330,
-            1320,
-            820,
-            932,
-            901,
-            934,
-            1290,
-            1330,
-            1320,
-            820,
-            932,
-            901,
-            934,
-            1290,
-            1330,
-            1320,
-            820,
-            932,
-          ],
+          data: values,
           type: "line",
         },
       ],
