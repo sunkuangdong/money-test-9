@@ -1,10 +1,6 @@
 <template>
   <Layout>
-    <Tabs
-      class-prefix="type"
-      :data-source="recordTypeList"
-      :value.sync="type"
-    />
+    <Tabs class-prefix="type" :data-source="recordTypeList" :value.sync="type" />
     <div class="chart-wrapper" ref="chartWrapper">
       <Chart class="chart" :options="chartOptions" />
     </div>
@@ -116,6 +112,7 @@ export default class Statistics extends Vue {
   }
   get groupedList() {
     const { recordList } = this;
+
     if (recordList.length === 0) {
       return [];
     }
@@ -124,7 +121,7 @@ export default class Statistics extends Vue {
       .sort(
         (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
       );
-    console.log(newList);
+
     type Result = { title: string; total?: number; items: RecordItem[] }[];
     const result: Result = [
       {
